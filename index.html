@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>日历</title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding: 0;
+		}
+		.calendar{
+			width: 1000px;
+			height: 530px;
+			border-top: 1px solid #eee;
+			margin: 0 auto;
+		}
+		.calendar .header{
+			width: 100%;
+			height: 40px;
+			background: #eee;
+			/*border:1px solid black;*/
+		}
+		.calendar .header .mid{
+			width: 250px;
+			height: 100%; 
+			padding: 5px;
+			position: relative;
+			/*left: 50%;*/
+			margin: 0 auto;
+		}
+		.calendar .header .mid span{
+			font-size: 15px;
+			font-weight: 700;
+		}
+		.calendar .header .left{
+			float: left;
+			width: 100px;
+			height: 100%;
+			/*background:#fff;*/
+		}
+		.calendar .header .right{
+			position: relative;
+			left: 890px;
+			top: -50px;
+			width: 100px;
+			height: 100%;
+			/*background:#fff;*/
+		}
+		.calendar .header img{
+			width: 30px;
+			height: 30px;
+			margin: 5px 0 5px 10px;
+			border: 4px solid #eee;
+			box-sizing: border-box;
+		}
+		.calendar .header img:hover{
+			cursor: pointer;
+			border: 0 solid #eee;
+			/*box-sizing: border-box;*/
+			/*background:#6c6c6c;*/
+		}
+		.calendar .header .mid input.year{
+			width: 45px;
+			vertical-align: middle;
+			font-size: 12px;
+			font-weight: 700;
+			color: #000;
+			padding-left: 4px;
+		}
+		.calendar .header .mid input.month{
+			width: 30px;
+			vertical-align: middle;
+			font-size: 12px;
+			font-weight: 700;
+			color: #000;
+			padding-left: 4px;
+		}
+		.calendar .header .mid button{
+			width: 50px;
+			font-size: 12px;
+			font-weight: 700;
+			color: #000;
+			padding: 2px 4px;
+			border-radius: 20px;
+			outline: 0;
+   			cursor: pointer;
+   			border: none;
+		}
+		.calendar .header .mid button:hover{
+			background:#6c6c6c;
+			color: #fff;
+		}
+		.calendar .tablebox1 table{
+			width: 100%;
+			z-index: 200;
+			/*合并表格两个相邻的边框*/
+			border-collapse: collapse;
+		}
+		.calendar .tablebox1 table.bgtable thead tr th{
+			height: 30px;
+			border-top: 1px solid black;
+			box-sizing: border-box;
+		}
+		.calendar .tablebox1 table.bgtable tbody tr td{
+			height: 100px;
+			border:1px solid #ccc;
+			/*把边框算进宽高*/
+			box-sizing: border-box;
+			text-align: left;
+			vertical-align: top;
+			padding: 4px;
+		}
+		.calendar .tablebox1 table.bgtable tbody tr td:hover{
+			background:#eee;
+		}
+		/*.calendar .tablebox1 table.bgtable tbody tr td:hover{
+			background:#eee;
+			cursor:pointer;
+		}*/
+		.calendar .tablebox1 table.bgtable tbody tr td.gray{
+			background: #eee;
+			color: #fff;
+		}
+		.calendar .tablebox1 table.bgtable tbody tr td.today{
+			border: 2px solid lightblue;
+			box-sizing: border-box; 
+		}
+		.calendar .tablebox2{
+			width:1000px;
+			height: 600px;
+			position: absolute;
+			top: 69px;
+			/*border: 1px solid red;*/
+		}
+		.calendar .tablebox2 .row{
+			height: 70px;
+			/*border: 1px solid blue;*/
+			box-sizing: border-box;
+		}
+		.calendar .tablebox2 .row table.scheduletable{
+			width: 100%;
+			height: 70px;
+			border-collapse: collapse;
+			/*background:pink;*/
+			margin-top: 30px;
+			/*border: 1px solid black;*/
+		}
+		.calendar .tablebox2 .row table.scheduletable tr{
+			height: 20px;
+			width: 100%;
+			/*border:1px solid black;*/
+		}
+		/*.calendar .tablebox2 .row table.scheduletable tr:nth-child(2){
+			background-color: yellowgreen;
+		}
+		.calendar .tablebox2 .row table.scheduletable tr:nth-child(3){
+			background-color: gold;
+		}*/
+		.calendar .tablebox2 .row table.scheduletable tr td{
+			width: 142.857px;
+			height: 20px;
+			box-sizing: border-box;
+			padding-left: 2px;
+			padding-right: 2px;
+		}
+		.calendar .tablebox2 .row table.scheduletable tr td .s{
+			border-radius: 15px;
+			font-size: 11px;
+			font-weight: 700;
+			color: #fff;
+			height: 20px;
+			line-height: 20px;
+			text-align: left;
+			padding-left: 10px;
+		}
+		.calendar .tablebox2 .row table.scheduletable tr td .s:hover{
+			margin: 0 2px;
+			height: 19px;
+			box-sizing: border-box;
+		}
+		.calendar .tablebox2 .row table.scheduletable tr td .s.life{
+			background-color: yellowgreen;
+		}
+		.calendar .tablebox2 .row table.scheduletable tr td .s.work{
+			background-color: pink;
+		}
+		.calendar .tablebox2 .row table.scheduletable tr td .s.important{
+			background-color: red;
+		}
+		.calendar #statistics{
+			width:800px;
+			height: 400px;
+			position: absolute;
+			padding-bottom: 50px;
+			top: 100px;
+			left: 200px;
+			background: rgba(255,255,255,0.9);
+			display: none;
+			border: 1px solid #eee;
+		}
+		.calendar #sta{
+			width: 100%;
+			height: 100%;
+			/*border: 1px solid #eee;*/
+		}
+		.calendar .close{
+			/*width: 10px;*/
+			/*height: 10px;*/
+			position: absolute;
+			top: 0px;
+			left: 780px;
+		}
+		.calendar .close img{
+			width: 20px;
+			height: 20px;
+			opacity:0.8;
+			filter(alpha=80);
+		}
+		.calendar .close img:hover{
+			 opacity:1;
+			filter(alpha=100);
+			cursor: pointer;
+		}
+		.calendar #assign{
+			width:400px;
+			height: 300px;
+			position: absolute;
+			top: 69px;
+			background: rgba(255,255,255,0.5);
+			display: none;
+			border: 1px solid red;
+		}
+	</style>
+</head>
+<body>
+	
+	<div class="calendar" id="calendar">
+		<div class="header">
+			<div class="left">
+				<img v-on:click="change('pre')" src="img/向左.png" >
+				<img id="S" v-on:click="openS" src="img/统计9.png" >
+			</div>
+			<div class="mid">
+				<button v-on:click="toToday">今天</button>
+				<input class="year" v-model="year" type="number" placeholder="年份"><span>年</span>
+				<input class="month" v-model="month" type="number" placeholder="月份"><span>月</span>
+				<button v-on:click="change">确定</button>
+				
+			</div>
+			<div class="right">
+				<img id="A" v-on:click="openA" src="img/加号.png" >
+				<img v-on:click="change('next')" src="img/向右.png" >
+			</div>
+		</div>	
+
+		<div class="tablebox1">
+			<table class="bgtable">
+				<thead>
+					<tr>
+						<th v-for="(week,index) in weekDay">{{week}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 第一种方法：用一个二维数组day2保存日期-->
+					<!-- <tr v-for="(week,index) in day2">
+						<td v-for="(day,index2) in week">{{day}}</td>
+					</tr>  -->
+
+					<!-- 第二种方法：用一个一维数组day1保存日期，一半后台传送的数据就是这样的，所以我们需要做的就是将其转化为Vue能够识别的中间形式 -->
+					<tr v-for="(week,index) in dealDay1()">
+						<td :class="{gray:(day.preMonth||day.nextMonth),today:(today.date===day.date&&month===today.month&&year==today.year)}" v-for="(day,index2) in week">{{day.date}}</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+		<div class="tablebox2">
+			<div class="row" v-for="(week,index1) in dataDom">
+				<table  class="scheduletable">
+					<tr v-for="(line,index2) in week">
+						<td v-for="(item,index3) in line" :colspan="item.colspan">
+							<div v-if="item.title" :class="['s',item.type]">{{item.title}}</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			
+		</div>
+
+		<!--统计弹窗-->
+		<div id="statistics">
+			<div id="sta">
+
+			</div>
+			<div class="close">
+				<img v-on:click="closeS" src="img/关闭-弹窗.png" alt="">
+			</div>
+		</div>
+
+		<!--添加事件弹窗-->
+		<div id="assign">
+			<table>
+				<tr>
+					<td>事件名称：</td>
+					<td>
+						<input name="title" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td>事件类型：</td>
+					<td>
+						<select name="type">
+							<option value ="life">life</option>
+							<option value ="work">work</option>
+							<option value ="important">important</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>开始时间：</td>
+					<td>
+						<input name="start" type="date" >
+					</td>
+				</tr>
+				<tr>
+					<td>结束时间：</td>
+					<td>
+						<input name="end" type="date" >
+					</td>
+				</tr>
+			</table>
+			<button v-on:click="closeA">确定</button>
+		</div>
+
+		
+	</div>
+
+	<script type="text/javascript" src="bower_components/vue/dist/vue.min.js"></script>
+	<script type="text/javascript" src="js/echarts.min.js"></script>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: "#calendar",
+			data:{
+				weekDay:['周一','周二','周三','周四','周五','周六','周日'],
+				day1:[],
+				year:2018,
+				//1-12月
+				month:5,
+				today:{"year":'',"month":'',"date":''},
+				dataDom:[
+					[
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[]
+					]
+				],
+				schedules:[
+					{"title":"开会","type":"work","start":"20180430","end":"20180502"},
+					{"title":"面试","type":"important","start":"20180515","end":"20180515"},
+					{"title":"开会","type":"work","start":"20180508","end":"20180512"},
+					{"title":"吃饭","type":"life","start":"20180510","end":"20180512"},
+					{"title":"讲座","type":"work","start":"20180511","end":"20180513"},
+					{"title":"打球","type":"life","start":"20180521","end":"20180522"},
+					{"title":"打游戏","type":"life","start":"20180516","end":"20180518"},
+					{"title":"吃饭","type":"life","start":"20180516","end":"20180516"},
+					{"title":"考试","type":"important","start":"20180516","end":"20180516"}
+				]
+				// dataDom:[
+				// 	[
+				// 		[{"title":"吃饭","colspan":3,"type":"life"},{},{},{},{}],
+				// 		[{},{},{},{},{},{},{}],
+				// 		[{},{},{},{},{},{},{}]
+				// 	],
+				// 	[
+				// 		[{},{},{},{"title":"吃饭","colspan":2,"type":"life"},{},{}],
+				// 		[{},{},{"title":"讲座","colspan":3,"type":"work"},{},{}],
+				// 		[{},{},{},{},{},{},{}]
+				// 	],
+				// 	[
+				// 		[{},{},{},{},{},{},{}],
+				// 		[{},{},{},{},{},{},{}],
+				// 		[{},{},{},{},{},{},{}]
+				// 	],
+				// 	[
+				// 		[{},{},{},{},{},{},{}],
+				// 		[{},{},{},{},{},{},{}],
+				// 		[{},{},{},{},{},{},{}]
+				// 	],
+				// 	[
+				// 		[{},{},{},{},{},{},{}],
+				// 		[{},{},{},{},{},{},{}],
+				// 		[{},{},{},{},{},{},{}]
+				// 	]
+				// ]
+
+				// day2:[
+				// 		[1,2,3,4,5,6,7,],
+				// 		[1,2,3,4,5,6,7,],
+				// 		[1,2,3,4,5,6,7,],
+				// 		[1,2,3,4,5,6,7,],
+				// 		[1,2,3,4,5,6,7,],
+				//    ],
+				// day1:[1,2,3,4,5,6,7,1,2,3,4,5,6,7,1,2,3,4,5,6,7,1,2,3,4,5,6,7,1,2,3,4,5,6,7]
+
+			},
+			mounted:function(){
+				this.getToday();
+				this.dealSchedules(this.AcquireDay1());
+			},
+			methods:{
+                openS:function(){
+                    document.getElementById("statistics").style.display="block";
+                    this.statisticsF();
+                    // document.getElementById("S").style.display="none";
+				},
+                closeS:function(){
+                    document.getElementById("statistics").style.display="none";
+                    // document.getElementById("S").style.display="none";
+                },
+                openA:function(){
+                    document.getElementById("assign").style.display="block";
+                    // document.getElementById("A").style.display="none";
+                },
+                closeA:function(){
+                    document.getElementById("assign").style.display="none";
+                    this.add();
+                    // document.getElementById("A").style.display="none";
+                },
+                add:function(){
+                    var type=document.getElementsByName("type")[0].value;
+                    var start=document.getElementsByName("start")[0].value;
+                    var end=document.getElementsByName("end")[0].value;
+					var title=document.getElementsByName("title")[0].value;
+					start=start.substr(0,4)+start.substr(5,2)+start.substr(8,2);
+                    end=end.substr(0,4)+end.substr(5,2)+end.substr(8,2);
+					console.log(start);
+                    this.schedules.push({"title":title,"type":type,"start":start,"end":end})
+                    this.dealSchedules(this.AcquireDay1());
+                },
+				statisticsF:function(){
+                    var myChart=echarts.init(document.getElementById('sta'));
+                    var L=0,W=0,I=0;
+                    this.schedules.forEach(function (s, index) {
+						if(s.type==='life')
+						    L++;
+                        if(s.type==='work')
+                            W++;
+                        if(s.type==='important')
+                            I++;
+                    });
+                    var option={
+                        // title:{
+                        //     text:'事件类型统计'
+                        // },
+                        // tooltip:{},
+                        // legend:{
+                        //     data:['数量']
+                        // },
+                        // xAxis:{
+                        //     data:['life','work','important']
+                        // },
+                        // yAxis:{
+                        //
+                        // },
+                        // series:[{
+                        //     name:'数量',
+                        //     type:'bar',
+                        //     data:[L,W,I]
+                        // }]
+
+                        backgroundColor: '#2c343c',
+
+                        title: {
+                            text: 'Customized Pie',
+                            left: 'center',
+                            top: 20,
+                            textStyle: {
+                                color: '#ccc'
+                            }
+                        },
+
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+
+                        visualMap: {
+                            show: false,
+                            min: 80,
+                            max: 600,
+                            inRange: {
+                                colorLightness: [0, 1]
+                            }
+                        },
+                        series : [
+                            {
+                                name:'访问来源',
+                                type:'pie',
+                                radius : '55%',
+                                center: ['50%', '50%'],
+                                data:[
+                                    {value:335, name:'直接访问'},
+                                    {value:310, name:'邮件营销'},
+                                    {value:274, name:'联盟广告'},
+                                    {value:235, name:'视频广告'},
+                                    {value:400, name:'搜索引擎'}
+                                ].sort(function (a, b) { return a.value - b.value; }),
+                                roseType: 'radius',
+                                label: {
+                                    normal: {
+                                        textStyle: {
+                                            color: 'rgba(255, 255, 255, 0.3)'
+                                        }
+                                    }
+                                },
+                                labelLine: {
+                                    normal: {
+                                        lineStyle: {
+                                            color: 'rgba(255, 255, 255, 0.3)'
+                                        },
+                                        smooth: 0.2,
+                                        length: 10,
+                                        length2: 20
+                                    }
+                                },
+                                itemStyle: {
+                                    normal: {
+                                        color: '#c23531',
+                                        shadowBlur: 200,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                },
+
+                                animationType: 'scale',
+                                animationEasing: 'elasticOut',
+                                animationDelay: function (idx) {
+                                    return Math.random() * 200;
+                                }
+                            }
+                        ]
+                    };
+                    myChart.setOption(option);
+				},
+				toToday:function(){
+					this.year=this.today.year;
+					this.month=this.today.month;
+					this.dealSchedules(this.AcquireDay1());
+				},
+				getToday:function(){
+					var t=new Date();
+					this.today.year=t.getFullYear();
+					this.today.month=t.getMonth()+1;
+					this.today.date=t.getDate();
+					console.log(this.today)
+				},
+				change:function(para){
+					if(para==='next'){
+						this.month=this.month==12?1:this.month+1;
+						this.year=this.month==12?this.year+1:this.year;
+					}
+					if(para==='pre'){
+						this.month=this.month==1?12:this.month-1;
+						this.year=this.month==1?this.year-1:this.year;
+					}
+					this.dealSchedules(this.AcquireDay1());
+				},
+
+				//以下为获取一维数组形式的日期
+				AcquireDay1:function(){
+					//修改为整型，否则是字符型会报错
+					this.year=parseInt(this.year);
+					this.month=parseInt(this.month);
+
+					// console.log(this.year,this.month)
+
+					var dayArr=[];
+					// 获取本月的第一天是周几
+					var the1stDay=new Date(this.year,this.month-1,1).getDay();	
+					//下一个月是哪一年
+					var nextMonthYear=this.month==12? this.year+1:this.year;
+					//下一个月是那一个月
+					var nextMonth=this.month==12?1:this.month+1;
+					//上一个月是哪一年
+					var preMonthYear=this.month==1? this.year-1:this.year;
+					//上一个月是那一个月
+					var preMonth=this.month==1?12:this.month-1;
+					
+					//获取本月的天数 即 本月的最后一天的日期：这个月的最后一天，就是下个月的第一天减去1毫秒
+					var lastDate= new Date( new Date(nextMonthYear,nextMonth-1,1)-1).getDate();
+					//上个月最后一天的日期，同上
+					var preMonthLastDate=new Date(new Date(this.year,this.month-1,1)-1).getDate()
+
+					//头进头出的放入本月数据
+					lastDate++;
+					while((lastDate--)-1){
+						dayArr.unshift({"date":lastDate,"year":this.year,"month":this.month})
+					}
+					//头进头出的放入上月数据，本月的第一天是周几，开头就要放入几个上个月的日期，星期日的话就不放
+					if(the1stDay>1){
+						while(--the1stDay){//先减再判断
+							dayArr.unshift({"date":preMonthLastDate--,"year":preMonthYear,"month":preMonth,"preMonth":true});
+						}
+					}
+					//尾进头出的放入下个月的数据，本月的结束要放置几个下个月的日期，补足35或者42项即可
+					if(dayArr.length<=35){
+						var count=1;
+						while(dayArr.length<35){
+							dayArr.push({"date":count++,"year":nextMonthYear,"month":nextMonth,"nextMonth":true})
+						}
+					}else{
+						var count=1;
+						while(dayArr.length<42){
+							dayArr.push({"date":count++,"year":nextMonthYear,"month":nextMonth,"nextMonth":true})
+						}
+					}
+					this.day1=dayArr;
+					
+					return dayArr;
+				},
+
+				//将一维数组转换为二维数组
+				dealDay1:function(){
+					// if(this.day1.length===0) retuen[];
+					var _arr=[];
+					for(var i=0;i<this.day1.length/7;i++){
+						var _week=[];
+						for(var j=0;j<7;j++){
+							_week.push(this.day1[i*7+j]);
+						}
+						_arr.push(_week);
+					}
+					return _arr
+				},
+
+				dealSchedules:function(dayArr){//由于Vue底层的问题，这个时候我们无法读取this.day1只能通过传参的方式读取acquireDay1函数里计算的dayArr
+					//第一个问题要知道每个td是哪一天的
+					var dataDom=this.length==35?[[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]]]:[[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]],[[],[],[]]];
+					//往domData里放默认的td即每个td所对应的日期
+					dataDom.forEach(function(row,index1){
+						row.forEach(function(line,index2){
+							for(var i=0;i<7;i++){
+								let thisDate=dayArr[index1*7+i];
+								line.push({"title":'',"type":'',"year":thisDate.year,"month":thisDate.month,"date":thisDate.date});
+							}
+						})
+					})
+
+					//遍历每个事件，把对应日期的事件放入td
+					this.schedules.forEach(function(s,index){
+						var startYear=parseInt(s.start.substr(0,4));//从第0位开始取4个
+						var startMonth=parseInt(s.start.substr(4,2));
+						var startDate=parseInt(s.start.substr(6,2));
+						// console.log(startYear,startMonth,startDate);
+
+						var endYear=parseInt(s.end.substr(0,4));//从第0位开始取4个
+						var endMonth=parseInt(s.end.substr(4,2));
+						var endDate=parseInt(s.end.substr(6,2));
+						// console.log(endYear,endMonth,endDate);
+
+						var colspan=((new Date(endYear,endMonth-1,endDate)-new Date(startYear,startMonth-1,startDate))/(24*60*60*1000))+1;
+						// console.log(colspan);
+
+						var diffWeek=0;//标志是否跨周
+						if(new Date(startYear,startMonth-1,startDate).getDay()+colspan>7)
+							diffWeek=1;//跨周
+
+						var haveFind=0;//标志是否已经在td中存放该事件
+						dataDom.forEach(function(row,index1){//row为每周
+							row.forEach(function(line,index2){//line为一周里的每行
+								// console.log(line);
+								
+								for(let i=0;i<line.length&&!haveFind;i++){//遍历一行里的每个td
+									let thisDate=line[i];
+									
+									if(thisDate.year==startYear&&thisDate.month==startMonth&&thisDate.date==startDate&&thisDate.type==='')//找到对应的，且该td没有被占用
+									{
+										var ocup=0;
+
+										// 遍历后边将要用到的td是否已被占用
+										for(let j=i+1;j<i+colspan&&j<line.length;j++){//注意不要越界<先判断条件再执行。如果初值不满足条件，一次都不执行。
+											let temp=line[j];
+											// console.log(temp.type==''?0:1);
+											if(temp.type!=''){
+												ocup=1;//标志后边已被占用，需从下一个line中寻找合适的td
+
+												break;
+											}
+										}
+
+										if(ocup===0){//只有当后边的td没有被占用，才放置到对应td
+											thisDate.title=s.title;
+											thisDate.type=s.type;
+											thisDate.colspan=colspan;
+											//删除该事件后边占用的td
+											line.splice(i+1,colspan-1);
+											line[i]=thisDate;
+											//标志该事件已经找到td
+											haveFind=1;
+										}
+										
+									}
+									
+									
+									
+								}
+								
+								
+							})
+						})
+
+						
+					});
+					
+					
+					this.dataDom=dataDom;
+				}
+			}
+			
+		})
+	</script>
+</body>
+</html>
